@@ -8,6 +8,7 @@
     Title="{Binding Title}"
     ios:Page.UseSafeArea="true"
     Style="{StaticResource PageStyle}">
+    <Grid>
     <ScrollView>
         <StackLayout Padding="40,20">
             <StackLayout BindableLayout.ItemsSource="{Binding TermsOfServices}" Spacing="16">
@@ -27,4 +28,10 @@
                 Text="{x:Static resources:AppResources.ButtonAgree}" />
         </StackLayout>
     </ScrollView>
+        <Frame
+            IsVisible="{Binding IsBusy}"
+            Style="{StaticResource ActivityIndicatorFrame}">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" />
+        </Frame>
+    </Grid>
 </ContentPage>

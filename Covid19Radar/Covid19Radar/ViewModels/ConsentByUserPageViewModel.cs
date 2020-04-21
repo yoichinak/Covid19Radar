@@ -23,6 +23,13 @@ namespace Covid19Radar.ViewModels
             set => SetProperty(ref _termsOfServices, value);
         }
 
+        private bool _isBusy = false;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
+        }
+
         public ConsentByUserPageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
@@ -35,7 +42,9 @@ namespace Covid19Radar.ViewModels
                  // Regist user
                  if (!_userDataService.IsExistUserData)
                  {
+                     IsBusy = true;
                      UserDataModel userData = await _userDataService.RegistUserAsync();
+                     IsBusy = false;
                  }
 
                  await NavigationService.NavigateAsync("InitSettingPage");
