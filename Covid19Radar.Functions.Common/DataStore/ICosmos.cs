@@ -8,5 +8,6 @@ namespace Covid19Radar.DataStore
         Container Beacon { get; }
         Container Sequence { get; }
         Container Otp { get; }
+        string ContainerNameBeacon { get; }
     }
 }

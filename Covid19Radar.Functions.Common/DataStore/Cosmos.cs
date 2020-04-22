@@ -38,6 +38,8 @@ namespace Covid19Radar.DataStore
         public Container Sequence { get => Database.GetContainer("Sequence");  }
         public Container Otp { get => Database.GetContainer("Otp"); }
 
+        public string ContainerNameBeacon { get => BeaconStoreName; }
+
         /// <summary>
         /// DI Constructor
         /// </summary>
@@ -123,6 +125,7 @@ namespace Covid19Radar.DataStore
             catch { }
             var otpProperties = new ContainerProperties("Otp", "/UserUuid");
             var otpResult = await dbResult.Database.CreateContainerIfNotExistsAsync(otpProperties);
+
         }
 
     }
