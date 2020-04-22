@@ -29,11 +29,16 @@ namespace Covid19Radar.DataStore
         // コンテナの自動生成
         private bool AutoGenerate;
 
+        // Beacon store name
+        private string BeaconStoreName;
+
         // The container we will create.
         public Container User { get => Database.GetContainer("User"); }
-        public Container Beacon { get => Database.GetContainer("Beacon"); }
+        public Container Beacon { get => Database.GetContainer(BeaconStoreName); }
         public Container Sequence { get => Database.GetContainer("Sequence");  }
         public Container Otp { get => Database.GetContainer("Otp"); }
+
+        public string ContainerNameBeacon { get => BeaconStoreName; }
 
         /// <summary>
         /// DI Constructor
@@ -46,6 +51,7 @@ namespace Covid19Radar.DataStore
             PrimaryKey = config.GetSection("COSMOS_PRIMARY_KEY").Value;
             DatabaseId = config.GetSection("COSMOS_DATABASE_ID").Value;
             AutoGenerate = bool.Parse(config.GetSection("COSMOS_AUTO_GENERATE").Value);
+            BeaconStoreName = config.GetSection("COSMOS_BEACON_STORE").Value;
 
             // Create a new instance of the Cosmos Client
             CosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
@@ -101,13 +107,13 @@ namespace Covid19Radar.DataStore
             var userDataResult = await dbResult.Database.CreateContainerIfNotExistsAsync(userProperties);
 
             // Container Beacon
-            Logger.LogInformation("GenerateAsync Create Beacon Container");
+            Logger.LogInformation($"GenerateAsync Create Beacon Container name:{BeaconStoreName}");
             try
             {
-                await dbResult.Database.GetContainer("Beacon").DeleteContainerAsync();
+                await dbResult.Database.GetContainer(BeaconStoreName).DeleteContainerAsync();
             }
             catch { }
-            var beaconProperties = new ContainerProperties("Beacon", "/PartitionKey");
+            var beaconProperties = new ContainerProperties(BeaconStoreName, "/PartitionKey");
             var beaconResult = await dbResult.Database.CreateContainerIfNotExistsAsync(beaconProperties);
 
             // Container Otp
@@ -119,6 +125,7 @@ namespace Covid19Radar.DataStore
             catch { }
             var otpProperties = new ContainerProperties("Otp", "/UserUuid");
             var otpResult = await dbResult.Database.CreateContainerIfNotExistsAsync(otpProperties);
+
         }
 
     }

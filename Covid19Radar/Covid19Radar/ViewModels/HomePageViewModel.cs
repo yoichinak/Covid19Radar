@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Covid19Radar.Model;
 using Covid19Radar.Resx;
+using Covid19Radar.Services;
 using Prism.Navigation;
 using Xamarin.Forms;
 
@@ -10,11 +11,16 @@ namespace Covid19Radar.ViewModels
     public class HomePageViewModel : ViewModelBase, INotifyPropertyChanged
     {
         public List<HomeMenuModel> HomeMenus { get; private set; }
+        private IBeaconService _beaconService;
 
         public HomePageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             Title = AppResources.HomeTitle;
+            _beaconService = Xamarin.Forms.DependencyService.Resolve<IBeaconService>();
+            // Only Call InitializeService! Start automagically!
+            _beaconService.InitializeService();
+
             SetData();
         }
 
@@ -34,7 +40,7 @@ namespace Covid19Radar.ViewModels
                 },
                 new HomeMenuModel
                 {
-                    Title=AppResources.UpdateInformationMenu,
+                    Title=AppResources.TitleUpdateInformation,
                     Command=OnClickUpateInfo
                 },
                 new HomeMenuModel
@@ -44,13 +50,13 @@ namespace Covid19Radar.ViewModels
                 },
                 new HomeMenuModel
                 {
-                    Title=AppResources.LicenseAgreementMenu,
+                    Title=AppResources.TitleLicenseAgreement,
                     Command=OnClickLicenseAgreement
                 }
             };
         }
 
-        
+
 
         public Command OnClickUserSetting => new Command(() =>
         {
@@ -58,7 +64,7 @@ namespace Covid19Radar.ViewModels
         });
         public Command OnClickAcknowledgments => new Command(() =>
         {
-            NavigationService.NavigateAsync("ContributersPage");
+            NavigationService.NavigateAsync("ContributorsPage");
         });
 
         public Command OnClickUpateInfo => new Command(() =>
